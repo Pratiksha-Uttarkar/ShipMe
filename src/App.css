@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+* {
+  box-sizing: border-box;
+}
+
+.img-container {
+position: relative;
+overflow: hidden;
+}
+.img-container img{
+  width: 100%;
+  height: 100%;
+}
+.i {
+  position: relative;
+  height: auto;
+  /* width: 60%; */
+  background-size: cover;
+  margin-top: 70px;
+}
+.about, .layout1 *{
+text-align: left;
+}
