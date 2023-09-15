@@ -5,12 +5,17 @@ import About from "./components/About";
 import Footer from "./components/Footer";
 import { Layout } from "./components/Layout";
 import Layout1 from "./components/Layout1";
+import Register from "./components/Register";
+import {BrowserRouter as Router, Routes,Route} from "react-router-dom"
 
 function App() {
   return (
     <div className="App">
-      <ResponsiveAppBar />
-      <div
+     <Router>
+     <ResponsiveAppBar />
+        <Routes>
+        <Route path="/register" element={<Register/>} />
+        <Route path="/" element={<div
         style={{
           width: "60%",
           margin: "auto",
@@ -21,7 +26,12 @@ function App() {
         <About />
         <Layout />
         <Layout1/>
-      </div>
+      </div>}
+      />
+        </Routes>
+      </Router> 
+     
+      
       <Footer />
     </div>
   );

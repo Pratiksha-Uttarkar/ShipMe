@@ -6,8 +6,8 @@ import { CardActionArea } from "@mui/material";
 
 export default function Layout1() {
   return (
-    <div className='layout1'>
-        <h1>Top Picks for you</h1>
+    <div className='layout1' style={{paddingBottom:"50px"}}>
+        <h1 style={{paddingTop:"50px",paddingBottom:"50px"}}>Top Picks for you</h1>
         <Grid
         container
         spacing={2}
