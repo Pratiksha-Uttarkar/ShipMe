@@ -5,7 +5,7 @@ function handleClick(event) {
   event.preventDefault();
   console.info("You clicked a breadcrumb.");
 }
-function About() {
+function About({props}) {
   return (
     <div className="about">
       <div role="presentation" onClick={handleClick}>

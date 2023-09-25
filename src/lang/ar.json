@@ -1,0 +1,18 @@
+{
+    "message.simple": "رسالة بسيطة.",
+    "signIn.text" : "لافتة",
+    "Register.text": "يسجل",
+    "firstname.label": "ما هو اسمك؟",
+    "lastname.label": " ما اسْمُكَ الأَخيرُ؟",
+    "contactnumber.label":"رقم الاتصال",
+    "emailaddress.label": "عنوان البريد الإلكتروني",
+    "password.label": "كلمة المرور",
+    "city.label": "مدينة",
+    "gender.label":"جنس",
+    "male.label": "أنثى",
+    "female.label": "ذكر",
+    "products.label":"منتجات",
+    "pricing.label":"سعر",
+    "blog.label": "مدونة"
+
+  }

@@ -1,0 +1,17 @@
+{
+    "message.simple": "Ship Me",
+    "signIn.text" : "Sign In",
+    "Register.text": "Register",
+    "firstname.label": "First Name",
+    "lastname.label": "Last Name",
+    "contactnumber.label":"Contact Number",
+    "emailaddress.label": "Email Address",
+    "password.label": "Password",
+    "city.label": "City",
+    "gender.label":"Gender",
+    "male.label": "Male",
+    "female.label": "Female",
+    "products.label":"products",
+    "pricing.label":"pricing",
+    "blog.label": "blog"
+  }
