@@ -19,40 +19,72 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import ReCaptcha from "react-google-recaptcha";
+import { FormattedMessage } from "react-intl";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
+function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(String(email).toLowerCase());
 }
+
+function validatePassword(password) {
+  // Add your password validation logic here (e.g., minimum length)
+  return password.length >= 6;
+}
+
+function validateContactNumber(contactNumber) {
+  // const contactNumber = /^\d{10}$/;
+  return contactNumber.length >= 10;
+}
+
 const theme = createTheme();
 
 export default function Register() {
   const [city, setCity] = React.useState("");
+  const [errors, setErrors] = React.useState({});
+  const [formData, setFormData] = React.useState({
+    firstName: "",
+    lastName: "",
+    contactNumber: "",
+    email: "",
+    password: "",
+  });
 
   const handleChange = (event) => {
-    setCity(event.target.value);
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    // Validate form fields
+    const newErrors = {};
+    if (!formData.firstName) {
+      newErrors.firstName = "First Name is required";
+    }
+    if (!formData.lastName) {
+      newErrors.lastName = "Last Name is required";
+    }
+    if (!validateContactNumber(formData.contactNumber)) {
+      newErrors.contactNumber = "Invalid Contact Number";
+    }
+    if (!validateEmail(formData.email)) {
+      newErrors.email = "Invalid Email Address";
+    }
+    if (!validatePassword(formData.password)) {
+      newErrors.password = "Password must be at least 6 characters long";
+    }
+
+    if (Object.keys(newErrors).length === 0) {
+      // Form is valid, you can submit it
+      console.log(formData);
+    } else {
+      // Form has errors, update the state to display error messages
+      setErrors(newErrors);
+    }
   };
 
   return (
@@ -76,7 +108,7 @@ export default function Register() {
           </Avatar>
 
           <Typography component="h1" variant="h5">
-            Register
+            <FormattedMessage id="Register.text" />
           </Typography>
           <Box
             component="form"
@@ -92,8 +124,11 @@ export default function Register() {
                   required
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label={<FormattedMessage id="firstname.label" />}
                   autoFocus
+                  onChange={handleChange}
+                  error={Boolean(errors.firstName)}
+                  helperText={errors.firstName}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -101,9 +136,12 @@ export default function Register() {
                   required
                   fullWidth
                   id="lastName"
-                  label="Last Name"
+                  label={<FormattedMessage id="lastname.label" />}
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={handleChange}
+                  error={Boolean(errors.lastName)}
+                  helperText={errors.lastName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -111,32 +149,35 @@ export default function Register() {
                   required
                   fullWidth
                   id="contactNumber"
-                  label="Contact Number"
+                  label={<FormattedMessage id="contactnumber.label" />}
                   name="contactNumber"
                   autoComplete="contactNumber"
+                  onChange={handleChange}
+                  error={Boolean(errors.contactNumber)}
+                  helperText={errors.contactNumber}
                 />
               </Grid>
               <Grid item xs={2}>
-              <FormControl>
-                <FormLabel id="demo-controlled-radio-buttons-group">
-                  Gender
-                </FormLabel>
-                <RadioGroup
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female"
-                  />
-                  <FormControlLabel
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
-                  />
-                </RadioGroup>
-              </FormControl>
+                <FormControl>
+                  <FormLabel id="demo-controlled-radio-buttons-group">
+                    <FormattedMessage id="gender.label" />
+                  </FormLabel>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value="female"
+                      control={<Radio />}
+                      label={<FormattedMessage id="female.label" />}
+                    />
+                    <FormControlLabel
+                      value="male"
+                      control={<Radio />}
+                      label={<FormattedMessage id="male.label" />}
+                    />
+                  </RadioGroup>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
@@ -144,9 +185,12 @@ export default function Register() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label={<FormattedMessage id="emailaddress.label" />}
                   name="email"
                   autoComplete="email"
+                  onChange={handleChange}
+                  error={Boolean(errors.email)}
+                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -154,15 +198,20 @@ export default function Register() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label={<FormattedMessage id="password.label" />}
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={handleChange}
+                  error={Boolean(errors.password)}
+                  helperText={errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">City</InputLabel>
+                  <InputLabel id="demo-simple-select-label">
+                    {<FormattedMessage id="city.label" />}
+                  </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -176,7 +225,7 @@ export default function Register() {
               </Grid>
             </Grid>
 
-            <Grid item xs={12} style={{paddingTop:"20px"}}>
+            <Grid item xs={12} style={{ paddingTop: "20px" }}>
               <ReCaptcha sitekey="6LeLsiQoAAAAAJ_rZDGGkaSrobQ22Dqk42C-08kn" />
             </Grid>
             <Button
@@ -185,12 +234,12 @@ export default function Register() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Register
+              <FormattedMessage id="Register.text" />
             </Button>
             <Grid container justifyContent="flex-end"></Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        {/* <Copyright sx={{ mt: 5 }} /> */}
       </Container>
     </ThemeProvider>
   );

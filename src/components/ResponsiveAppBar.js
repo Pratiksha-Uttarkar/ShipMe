@@ -12,17 +12,22 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
+import { FormattedMessage } from "react-intl";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = [
+  <FormattedMessage id="products.label" />,
+  <FormattedMessage id="pricing.label" />,
+  <FormattedMessage id="blog.label" />,
+];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({ locale, onLocaleChange }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -37,7 +42,6 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
- 
 
   return (
     <AppBar position="static" style={{ zIndex: 1000 }}>
@@ -58,10 +62,11 @@ function ResponsiveAppBar() {
               color: "white",
               textDecoration: "none",
             }}
-            onClick={()=>navigate("/")}
+            onClick={() => navigate("/")}
           >
             ShipMe
           </Typography>
+          {/* <FormattedMessage id="message.simple" /> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -129,16 +134,31 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          <SearchIcon/>
+          <SearchIcon />
           <div className="btn">
-          <Button variant="contained" color="success">
-            sign in
-          </Button>
-          <Button variant="contained" color="success" onClick={()=>navigate("/register")}>
-           Register
-          </Button>
+            <Button variant="contained" color="success">
+              <FormattedMessage id="signIn.text" />
+              {/* Login */}
+            </Button>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => navigate("/register")}
+            >
+              <FormattedMessage id="Register.text" />
+            </Button>
+            <div style={{ textAlign: "center" }}>
+              <select
+                value={locale}
+                onChange={(e) => onLocaleChange(e.target.value)}
+              >
+                <option value="en">en</option>
+                <option value="es-MX">es-MX</option>
+                <option value="ar">ar</option>
+              </select>
+            </div>
           </div>
-          
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
