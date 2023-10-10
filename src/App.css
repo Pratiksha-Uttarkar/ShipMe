@@ -59,3 +59,11 @@ overflow: hidden;
 .about, .layout1 *{
 text-align: left;
 }
+.btn{
+  display: flex;
+  align-items: center;
+}
+
+.btn *{
+  margin: 5px !important;
+}

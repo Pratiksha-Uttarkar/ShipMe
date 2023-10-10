@@ -1,0 +1,16 @@
+{
+    "signIn.text" : "inicia sesión y ",
+    "Register.text": "regístrate",
+    "firstname.label":"voornaam",
+    "lastname.label":" Nachname",
+    "contactnumber.label":"número de contacto",
+    "emailaddress.label": "dirección de correo electrónico",
+    "password.label": "contraseña",
+    "city.label": "ciudad",
+    "gender.label":"género",
+    "male.label": "hombre",
+    "female.label": "mujer",
+    "products.label":"productos",
+    "pricing.label":"precios",
+    "blog.label": "bloguear"
+  }

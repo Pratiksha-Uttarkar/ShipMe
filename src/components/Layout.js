@@ -6,7 +6,7 @@ import { CardActionArea } from "@mui/material";
 
 export const Layout = () => {
   return (
-    <div>
+    <div style={{paddingTop:"50px"}}>
       <Grid
         container
         spacing={2}
