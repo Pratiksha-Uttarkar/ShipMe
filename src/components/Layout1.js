@@ -5,6 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 
 export default function Layout1() {
+
   return (
     <div className='layout1' style={{paddingBottom:"50px"}}>
         <h1 style={{paddingTop:"50px",paddingBottom:"50px"}}>Top Picks for you</h1>

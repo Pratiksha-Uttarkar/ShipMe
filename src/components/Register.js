@@ -114,10 +114,11 @@ export default function Register() {
          setFormData(initState);
       } catch (error) {
         // console.error(error.response.data.error);
-        if (error.response.data.error.includes("Email")) {
-          newErrors.email = error.response.data.error;
-        } else {
-          newErrors.contactNumber = error.response.data.error;
+        if (error.response.data.error.emailInvalidError || error.response.data.error.includes("Email")) {
+          newErrors.email = error.response.data.error.emailInvalidError ?? error.response.data.error;
+        } 
+        if(error.response.data.error.mobileNumberError || error.response.data.error.includes("Contact")){
+          newErrors.contactNumber = error.response.data.error.mobileNumberError ?? error.response.data.error;;
         }
         setErrors(newErrors); 
       }

@@ -9,6 +9,7 @@ import { Layout } from "./components/Layout";
 import Layout1 from "./components/Layout1";
 import Register from "./components/Register";
 import flattenObject from "./helpers/flatten-object";
+import Deliveryarea from "./components/Deliveryarea";
 import "./App.css"
 
 let initLocale = "en";
@@ -91,6 +92,7 @@ function App({ locale, direction, onLocaleChange }) {
           />
         </Routes>
       </Router>
+      <Deliveryarea/>
       <Footer />
     </div>
   );

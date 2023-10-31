@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  text-align: left;
 }
 
 .App-logo {
@@ -66,4 +66,39 @@ text-align: left;
 
 .btn *{
   margin: 5px !important;
+}
+.delivery-area-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  color: rgb(111, 117, 136);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  grid-template-rows: repeat(10, 1fr); /* 10 rows */
+  gap: 10px; 
+  /* font-weight: "500"; */
+}
+
+.grid-item {
+  padding: 5px;
+  border: 1px ;
+  text-align: left;
+  /* color: grey; */
+}
+.delivery-location-container{
+  width: 340px;
+  height: 60px;
+  border:1px solid white;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0px 5px 2px rgb(95 102 102 );
+  display: flex;
+  
+  align-items: center;
+  float: right;
+}
+.selected-area{
+  color: black;
 }

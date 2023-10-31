@@ -14,7 +14,13 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
+import Popover from "@mui/material/Popover";
 import { FormattedMessage } from "react-intl";
+import AddLocationIcon from "@mui/icons-material/AddLocation";
+import { TextField } from "@mui/material";
+import { useState } from "react";
+import GpsFixedIcon from "@mui/icons-material/GpsFixed";
+import CloseIcon from "@mui/icons-material/Close";
 
 const pages = [
   <FormattedMessage id="products" />,
@@ -26,7 +32,47 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 function ResponsiveAppBar({ locale, onLocaleChange }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [deliveryAreaData, setDeliveryAreaData] = useState(null);
+  const [selectedArea, setSelectedArea] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
+
   const navigate = useNavigate();
+  const open = Boolean(anchorEl);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleSelectArea = (areaName) => {
+    setSelectedArea(areaName);
+    setSearchValue("");
+    setDeliveryAreaData(null); // Clear the areas in the popover
+    handlePopoverClose();
+  };
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+    setSearchValue("");
+  };
+
+  const handleAddLocationClick = (val) => {
+    fetch("http://localhost:3000/api/v1/delivery-area").then((response) => {
+      console.log("==response");
+      const data = response.json();
+      if (val.length === 0 || val.length === 1 || val.length === 2) {
+        setDeliveryAreaData(null);
+      }
+      if (val.length === 2) {
+        data.then((actualdata) => {
+          const filteredData = actualdata.data.filter((area) =>
+            area.area_name.toLowerCase().includes(val.toLowerCase())
+          );
+          console.log(filteredData);
+          setDeliveryAreaData(filteredData);
+        });
+      }
+    });
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -104,6 +150,7 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
               ))}
             </Menu>
           </Box>
+
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -134,7 +181,107 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
               </Button>
             ))}
           </Box>
-          <SearchIcon />
+
+          <div className="delivery-location-container">
+            <IconButton
+              aria-label="add location"
+              aria-owns={open ? "add-location-popover" : undefined}
+              aria-haspopup="true"
+              onClick={handlePopoverOpen}
+              color="inherit"
+            >
+              <AddLocationIcon sx={{ color: "blue" }} />
+            </IconButton>
+            {selectedArea && (
+              <div className="selected-area">
+                <span>{selectedArea}</span>
+              </div>
+            )}
+          </div>
+          <Popover
+            id="add-location-popover"
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "center",
+              horizontal: "center",
+            }}
+          >
+            <Box p={2} style={{ width: "300px", textAlign: "left" }}>
+              <Typography variant="subtitle1">Add your Location</Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "-30px",
+                  marginBottom: "10px",
+                }}
+              >
+                <IconButton onClick={handlePopoverClose}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "16px",
+                }}
+              >
+                <SearchIcon style={{ marginRight: "8px" }} />
+                <TextField
+                  placeholder="Enter location"
+                  variant="outlined"
+                  size="small"
+                  style={{ width: "100%" }}
+                  value={searchValue}
+                  onChange={(e) => {
+                    setSearchValue(e.target.value);
+                    handleAddLocationClick(e.target.value);
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "8px",
+                }}
+              >
+                <GpsFixedIcon style={{ marginRight: "8px" }} />
+                <Typography>Search Nearby</Typography>
+              </div>
+              {deliveryAreaData && deliveryAreaData.length > 0 ? (
+                deliveryAreaData.map((area) => (
+                  <div
+                    key={area.area_id}
+                    style={{
+                      cursor: "pointer",
+                      marginTop: "8px",
+                      color: "grey",
+                    }}
+                    onClick={() => handleSelectArea(area.area_name)}
+                  >
+                    {area.area_name}
+                  </div>
+                ))
+              ) : (
+                <Typography>No matching areas found</Typography>
+              )}
+              <img
+                src="/assets/searchimg.jpg"
+                style={{ width: "100%", marginTop: "8px" }}
+                alt="search"
+              />
+            </Box>
+          </Popover>
+
+          {/* <SearchIcon /> */}
           <div className="btn">
             <Button variant="contained" color="success">
               <FormattedMessage id="signIn.text" />
@@ -147,7 +294,7 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
             >
               <FormattedMessage id="Register.text" />
             </Button>
-            <div style={{ textAlign: "center" }}>
+            {/* <div style={{ textAlign: "center" }}>
               <select
                 value={locale}
                 onChange={(e) => onLocaleChange(e.target.value)}
@@ -156,7 +303,7 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
                 <option value="es-MX">es-MX</option>
                 <option value="ar">ar</option>
               </select>
-            </div>
+            </div> */}
           </div>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -188,6 +335,11 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
               ))}
             </Menu>
           </Box>
+          {/* {selectedArea && (
+            <Typography variant="subtitle1" style={{ marginLeft: "20px" }}>
+              {selectedArea}
+            </Typography>
+          )} */}
         </Toolbar>
       </Container>
     </AppBar>
