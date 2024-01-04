@@ -19,7 +19,7 @@ function About({props}) {
             marginTop: "5%",
           }}
         >
-          <Link underline="hover" color="green" href="/">
+          <Link underline="hover" color="green" href="/" data-testid="Home-id">
             Home
           </Link>
 
@@ -28,19 +28,21 @@ function About({props}) {
             color="grey"
             href="/material-ui/react-breadcrumbs/"
             aria-current="page"
+            data-testid="Bangalore-id"
           >
             Bangalore
           </Link>
         </Breadcrumbs>
       </div>
 
-      <h1>Bangalore</h1>
+      <h1 data-testid="Bangalore-heading">Bangalore</h1>
       <p
         style={{
           lineHeight:"24px",
           color: "rgb(111, 117, 136)",
           fontWeight: "500"
         }}
+        data-testid="Bangalore-paragraph"
       >
         Why step out when you can get everything delivered home with the tap of
         a button? Bangalore’s favourite delivery app gets you Food, Grocery,

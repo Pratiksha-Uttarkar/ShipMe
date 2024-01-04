@@ -49,17 +49,17 @@ export default function Footer() {
               Follow Us
             </Typography>
             <Link href="https://www.facebook.com/" color="inherit">
-              <Facebook />
+              <Facebook data-testid="facebook-icon"/>
             </Link>
             <Link
               href="https://www.instagram.com/"
               color="inherit"
               sx={{ pl: 1, pr: 1 }}
             >
-              <Instagram />
+              <Instagram data-testid="instagram-icon"/>
             </Link>
             <Link href="https://www.twitter.com/" color="inherit">
-              <Twitter />
+              <Twitter data-testid="twitter-icon"/>
             </Link>
           </Grid>
         </Grid>

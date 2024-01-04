@@ -23,7 +23,7 @@ import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import CloseIcon from "@mui/icons-material/Close";
 
 const pages = [
-  <FormattedMessage id="products" />,
+  <FormattedMessage id="products.label" />,
   <FormattedMessage id="pricing.label" />,
   <FormattedMessage id="blog.label" />,
 ];
@@ -91,6 +91,7 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
 
   return (
     <AppBar position="static" style={{ zIndex: 1000 }}>
+      {/* <div>hello</div> */}
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -152,7 +153,8 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
           </Box>
 
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
+          {/* <Typography
+            data-testid="logo"
             variant="h5"
             noWrap
             component="a"
@@ -169,7 +171,7 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
             }}
           >
             LOGO
-          </Typography>
+          </Typography> */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -222,8 +224,8 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
                   marginBottom: "10px",
                 }}
               >
-                <IconButton onClick={handlePopoverClose}>
-                  <CloseIcon />
+                <IconButton aria-label="close" onClick={handlePopoverClose}>
+                  <CloseIcon data-testid="close" />
                 </IconButton>
               </Box>
               <div
@@ -283,8 +285,12 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
 
           {/* <SearchIcon /> */}
           <div className="btn">
-            <Button variant="contained" color="success">
-              <FormattedMessage id="signIn.text" />
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => navigate("/login")}
+            >
+              <FormattedMessage id="Login" />
               {/* Login */}
             </Button>
             <Button

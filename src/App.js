@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { IntlProvider } from "react-intl";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 import Hero from "./components/Hero";
@@ -8,11 +14,16 @@ import Footer from "./components/Footer";
 import { Layout } from "./components/Layout";
 import Layout1 from "./components/Layout1";
 import Register from "./components/Register";
-import flattenObject from "./helpers/flatten-object";
 import Deliveryarea from "./components/Deliveryarea";
-import "./App.css"
-
+import "./App.css";
+import Login from "./components/Login";
+import LocalStorage from "./helpers/Localstorage";
+import "./interceptor/axiosinterceptor";
+import { Redirect } from "./components/Redirect";
+import Logout from "./components/Logout";
+//import Admin from "./components/Admin";
 let initLocale = "en";
+
 if (navigator.language === "es-MX") {
   initLocale = "es-MX";
 } else if (navigator.language === "ar") {
@@ -23,10 +34,13 @@ function loadMessages(locale) {
   switch (locale) {
     case "ar":
       return import("./lang/ar.json");
+
     case "en":
       return import("./lang/en.json");
+
     case "es-MX":
       return import("./lang/es-MX.json");
+
     default:
       return import("./lang/en.json");
   }
@@ -36,9 +50,12 @@ function getDirection(locale) {
   switch (locale) {
     case "ar":
       return "rtl";
+
     case "en":
+
     case "es-MX":
       return "ltr";
+
     default:
       return "ltr";
   }
@@ -46,15 +63,15 @@ function getDirection(locale) {
 
 function LocalizationWrapper() {
   const [locale, setLocale] = useState(initLocale);
+
   const [messages, setMessages] = useState(null);
 
   useEffect(() => {
     loadMessages(locale).then((loadedMessages) => {
-      
       setMessages(loadedMessages.default);
     });
   }, [locale]);
-console.log(flattenObject(messages),messages)
+
   return messages ? (
     <IntlProvider locale={locale} messages={messages}>
       <App
@@ -67,33 +84,97 @@ console.log(flattenObject(messages),messages)
 }
 
 function App({ locale, direction, onLocaleChange }) {
+  if (LocalStorage.get("token"))
+    return (
+      <div className="App">
+        <Router>
+          <Routes>
+            <Route path="/logout" element={<Logout />} />
+            <Route
+              path="*"
+              element={
+                <>
+                  <Redirect url={"http://localhost:3003/admin"} />
+                </>
+              }
+            />
+          </Routes>
+        </Router>
+      </div>
+    );
   return (
     <div className="App">
       <Router>
-        <ResponsiveAppBar locale={locale} onLocaleChange={onLocaleChange} />
         <Routes>
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/register"
+            element={
+              <>
+                <ResponsiveAppBar
+                  locale={locale}
+                  onLocaleChange={onLocaleChange}
+                />
+                <Register /> <Footer />{" "}
+              </>
+            }
+          />
+          <Route
+            path="/Login"
+            element={
+              <>
+                <ResponsiveAppBar
+                  locale={locale}
+                  onLocaleChange={onLocaleChange}
+                />
+                <Login /> <Footer />{" "}
+              </>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <Redirect
+                url={
+                  "http://localhost:3003/?token=" + LocalStorage.get("token")
+                }
+              />
+            }
+          />
+          {/* <Route path="/admin" element={<Admin />} />
+           */}
           <Route
             path="/"
+            exact
             element={
-              <div
-                style={{
-                  width: "60%",
-                  margin: "auto",
-                  padding: "20px",
-                }}
-              >
-                <Hero />
-                <About />
-                <Layout />
-                <Layout1 />
-              </div>
+              <>
+                <ResponsiveAppBar
+                  locale={locale}
+                  onLocaleChange={onLocaleChange}
+                />
+                <div
+                  style={{
+                    width: "60%",
+
+                    margin: "auto",
+
+                    padding: "20px",
+                  }}
+                >
+                  <Hero />
+
+                  <About />
+
+                  <Layout />
+
+                  <Layout1 />
+                  <Deliveryarea />
+                </div>
+                <Footer />
+              </>
             }
           />
         </Routes>
       </Router>
-      <Deliveryarea/>
-      <Footer />
     </div>
   );
 }
