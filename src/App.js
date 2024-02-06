@@ -3,8 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
-  useLocation,
+  Navigate,
 } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
@@ -21,7 +20,8 @@ import LocalStorage from "./helpers/Localstorage";
 import "./interceptor/axiosinterceptor";
 import { Redirect } from "./components/Redirect";
 import Logout from "./components/Logout";
-//import Admin from "./components/Admin";
+import PrivateRoute from "./components/PrivateRoute";
+
 let initLocale = "en";
 
 if (navigator.language === "es-MX") {
@@ -63,7 +63,6 @@ function getDirection(locale) {
 
 function LocalizationWrapper() {
   const [locale, setLocale] = useState(initLocale);
-
   const [messages, setMessages] = useState(null);
 
   useEffect(() => {
@@ -84,24 +83,11 @@ function LocalizationWrapper() {
 }
 
 function App({ locale, direction, onLocaleChange }) {
-  if (LocalStorage.get("token"))
-    return (
-      <div className="App">
-        <Router>
-          <Routes>
-            <Route path="/logout" element={<Logout />} />
-            <Route
-              path="*"
-              element={
-                <>
-                  <Redirect url={"http://localhost:3003/admin"} />
-                </>
-              }
-            />
-          </Routes>
-        </Router>
-      </div>
-    );
+  console.log(process.env);
+  const [isUserLogin, setIsUserLogin] = useState(
+    LocalStorage.get("token") ? true : false
+  );
+  console.log(isUserLogin);
   return (
     <div className="App">
       <Router>
@@ -113,59 +99,58 @@ function App({ locale, direction, onLocaleChange }) {
                 <ResponsiveAppBar
                   locale={locale}
                   onLocaleChange={onLocaleChange}
+                  isUserLogin={isUserLogin}
+                  setIsUserLogin={setIsUserLogin}
                 />
                 <Register /> <Footer />{" "}
               </>
             }
           />
           <Route
-            path="/Login"
+            path="/login"
             element={
-              <>
-                <ResponsiveAppBar
-                  locale={locale}
-                  onLocaleChange={onLocaleChange}
-                />
-                <Login /> <Footer />{" "}
-              </>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <Redirect
-                url={
-                  "http://localhost:3003/?token=" + LocalStorage.get("token")
+              <PrivateRoute
+                element={
+                  <>
+                    <ResponsiveAppBar
+                      locale={locale}
+                      onLocaleChange={onLocaleChange}
+                      isUserLogin={isUserLogin}
+                      setIsUserLogin={setIsUserLogin}
+                    />
+                    <Login
+                      setIsUserLogin={setIsUserLogin}
+                      isUserLogin={isUserLogin}
+                    />{" "}
+                    <Footer />{" "}
+                  </>
                 }
+                validator={() => !LocalStorage.get("token")}
+                Failure={<Navigate to={"/dashboard"} />}
               />
             }
           />
-          {/* <Route path="/admin" element={<Admin />} />
-           */}
+
           <Route
             path="/"
-            exact
             element={
               <>
                 <ResponsiveAppBar
                   locale={locale}
                   onLocaleChange={onLocaleChange}
+                  isUserLogin={isUserLogin}
+                  setIsUserLogin={setIsUserLogin}
                 />
                 <div
                   style={{
                     width: "60%",
-
                     margin: "auto",
-
                     padding: "20px",
                   }}
                 >
                   <Hero />
-
                   <About />
-
                   <Layout />
-
                   <Layout1 />
                   <Deliveryarea />
                 </div>
@@ -173,6 +158,8 @@ function App({ locale, direction, onLocaleChange }) {
               </>
             }
           />
+
+          <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
       </Router>
     </div>

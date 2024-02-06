@@ -9,7 +9,7 @@ export default function Deliveryarea() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/v1/delivery-area",
+        process.env.REACT_APP_BASE_URL + "/api/v1/delivery-area",
         data
       );
       setData(response.data.data);
@@ -33,9 +33,7 @@ export default function Deliveryarea() {
 
   return (
     <div className="delivery-area-container">
-      <h1 style={{ color: "black"}}>
-        Delivery areas Hubli
-      </h1>
+      <h1 style={{ color: "black" }}>Delivery areas Hubli</h1>
       <div className="grid-container">
         {data.map((area) => (
           <div key={area.area_id} className="grid-item">

@@ -18,7 +18,7 @@ export const Layout = () => {
       // console.log(response);
 
       const response = await axios.get(
-        "http://localhost:3000/api/v1/test",
+        process.env.REACT_APP_BASE_URL + "/api/v1/test",
         data
       );
       setData(response.data.data);
@@ -56,8 +56,11 @@ export const Layout = () => {
                     <CardMedia
                       component="img"
                       height="140"
-                      alt={item.imagePath}
-                      image={item.imagePath}
+                      alt={item.imagePath.replace("http://localhost:3001", "")}
+                      image={item.imagePath.replace(
+                        "http://localhost:3001",
+                        ""
+                      )}
                     />
                   </CardActionArea>
                 </Card>

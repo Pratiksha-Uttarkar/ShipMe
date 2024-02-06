@@ -21,6 +21,9 @@ import { TextField } from "@mui/material";
 import { useState } from "react";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import CloseIcon from "@mui/icons-material/Close";
+import LocalStorage from "../helpers/Localstorage";
+import Avatar from "@mui/material/Avatar";
+import Stack from "@mui/material/Stack";
 
 const pages = [
   <FormattedMessage id="products.label" />,
@@ -28,8 +31,63 @@ const pages = [
   <FormattedMessage id="blog.label" />,
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const AvatarDropdown = ({ onLogout }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
 
-function ResponsiveAppBar({ locale, onLocaleChange }) {
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleAvatarClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    onLogout();
+    handleAvatarClose();
+  };
+
+  return (
+    <div>
+      <IconButton
+        aria-label="account of current user"
+        aria-controls="avatar-menu"
+        aria-haspopup="true"
+        onClick={handleAvatarClick}
+        color="inherit"
+        sx={{ p: 0 }}
+      >
+        <Avatar src="/broken-image.jpg" />
+      </IconButton>
+      <Menu
+        id="avatar-menu"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={Boolean(anchorEl)}
+        onClose={handleAvatarClose}
+      >
+        <MenuItem onClick={handleLogout}>
+          <Typography textAlign="center">Logout</Typography>
+        </MenuItem>
+      </Menu>
+    </div>
+  );
+};
+
+function ResponsiveAppBar({
+  locale,
+  onLocaleChange,
+  isUserLogin,
+  setIsUserLogin,
+}) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -56,7 +114,7 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
   };
 
   const handleAddLocationClick = (val) => {
-    fetch("http://localhost:3000/api/v1/delivery-area").then((response) => {
+    fetch("http://localhost:5000/api/v1/delivery-area").then((response) => {
       console.log("==response");
       const data = response.json();
       if (val.length === 0 || val.length === 1 || val.length === 2) {
@@ -72,6 +130,12 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
         });
       }
     });
+  };
+
+  const handleLogout = () => {
+    LocalStorage.remove("token");
+    setIsUserLogin(false);
+    navigate("/login");
   };
 
   const handleOpenNavMenu = (event) => {
@@ -284,15 +348,23 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
           </Popover>
 
           {/* <SearchIcon /> */}
-          <div className="btn">
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() => navigate("/login")}
-            >
-              <FormattedMessage id="Login" />
-              {/* Login */}
-            </Button>
+          <div className="btn" style={{ paddingLeft: "20px" }}>
+            {console.log("is user logged in ", isUserLogin)}
+            {isUserLogin ? (
+              "Hi Pratiksha"
+            ) : (
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() => {
+                  LocalStorage.remove("token");
+                  navigate("/login");
+                }}
+              >
+                <FormattedMessage id="Login" />
+                {/* Login */}
+              </Button>
+            )}
             <Button
               variant="contained"
               color="success"
@@ -300,6 +372,15 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
             >
               <FormattedMessage id="Register.text" />
             </Button>
+
+            {isUserLogin && (
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <AvatarDropdown onLogout={handleLogout} />
+                </Tooltip>
+              </Box>
+            )}
+
             {/* <div style={{ textAlign: "center" }}>
               <select
                 value={locale}
@@ -311,12 +392,12 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
               </select>
             </div> */}
           </div>
-
+          {/* 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-              </IconButton>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}> */}
+          {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+          {/* </IconButton>
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}
@@ -340,7 +421,7 @@ function ResponsiveAppBar({ locale, onLocaleChange }) {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Box> */}
           {/* {selectedArea && (
             <Typography variant="subtitle1" style={{ marginLeft: "20px" }}>
               {selectedArea}

@@ -13,26 +13,29 @@ import { useNavigate } from "react-router-dom";
 import loginService from "./services/login";
 import LocalStorage from "../helpers/Localstorage";
 
-const LoginPage = () => {
+const LoginPage = ({ isUserLogin, setIsUserLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [showErrorDialog, setShowErrorDialog] = useState(false);
+
   const handleLogin = async () => {
     console.log("Logging in with:", email, password);
     try {
       await loginService({ email, password });
-      window.location.href = `http://localhost:3003?token=${localStorage.getItem(
-        "token"
-      )}`;
+      setIsUserLogin(true);
+      navigate("/");
+      // window.location.href = `http://localhost:3003?token=${localStorage.getItem(
+      //   "token"
+      // )}`;
     } catch (e) {
       console.error(e);
       setShowErrorDialog(true);
+      setIsUserLogin(false);
     }
   };
 
   const handleCloseErrorDialog = () => {
-    // Close the error dialog
     setShowErrorDialog(false);
   };
 
