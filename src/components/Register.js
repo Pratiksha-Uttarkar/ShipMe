@@ -104,23 +104,33 @@ export default function Register() {
       console.log("submitting");
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/v1/register",
+          "http://localhost:5000/api/v1/register",
           formData
         );
         console.log("response=====");
         console.log(response.data);
         setErrors("");
         // setFormData("")
-         setFormData(initState);
+        setFormData(initState);
       } catch (error) {
         // console.error(error.response.data.error);
-        if (error.response.data.error.emailInvalidError || error.response.data.error.includes("Email")) {
-          newErrors.email = error.response.data.error.emailInvalidError ?? error.response.data.error;
-        } 
-        if(error.response.data.error.mobileNumberError || error.response.data.error.includes("Contact")){
-          newErrors.contactNumber = error.response.data.error.mobileNumberError ?? error.response.data.error;;
+        if (
+          error.response.data.error.emailInvalidError ||
+          error.response.data.error.includes("Email")
+        ) {
+          newErrors.email =
+            error.response.data.error.emailInvalidError ??
+            error.response.data.error;
         }
-        setErrors(newErrors); 
+        if (
+          error.response.data.error.mobileNumberError ||
+          error.response.data.error.includes("Contact")
+        ) {
+          newErrors.contactNumber =
+            error.response.data.error.mobileNumberError ??
+            error.response.data.error;
+        }
+        setErrors(newErrors);
       }
     } else {
     }

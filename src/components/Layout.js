@@ -18,7 +18,7 @@ export const Layout = () => {
       // console.log(response);
 
       const response = await axios.get(
-        process.env.REACT_APP_BASE_URL + "/api/v1/test",
+        process.env.REACT_APP_BASE_URL + "/api/v1/category",
         data
       );
       setData(response.data.data);
