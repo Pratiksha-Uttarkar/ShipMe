@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 // import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import SearchIcon from "@mui/icons-material/Search";
@@ -137,6 +138,24 @@ function ResponsiveAppBar({
     setIsUserLogin(false);
     navigate("/login");
   };
+  const handleCart = () => {
+    const jwtToken = localStorage.getItem("token");
+
+    // Split the token into header, payload, and signature
+    const [headerEncoded, payloadEncoded, signature] = jwtToken.split(".");
+
+    // Decode the payload (second part)
+    const decodedPayload = JSON.parse(
+      atob(payloadEncoded.replace(/-/g, "+").replace(/_/g, "/"))
+    );
+
+    // Example usage
+    console.log("pqrsttt", decodedPayload);
+    const { userId } = decodedPayload;
+    console.log("sakshi", userId);
+    // navigate(`/cart${userId}`);
+    navigate("/cart?user_id=" + userId);
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -217,25 +236,6 @@ function ResponsiveAppBar({
           </Box>
 
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          {/* <Typography
-            data-testid="logo"
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography> */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -348,6 +348,7 @@ function ResponsiveAppBar({
           </Popover>
 
           {/* <SearchIcon /> */}
+
           <div className="btn" style={{ paddingLeft: "20px" }}>
             {console.log("is user logged in ", isUserLogin)}
             {isUserLogin ? (
@@ -376,7 +377,26 @@ function ResponsiveAppBar({
             {isUserLogin && (
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
-                  <AvatarDropdown onLogout={handleLogout} />
+                  <AvatarDropdown
+                    style={{ paddingRight: "20%" }}
+                    onLogout={handleLogout}
+                  />
+                  <Button
+                    variant="outlined"
+                    startIcon={<AddShoppingCartIcon />}
+                    sx={{
+                      color: "white",
+                      borderColor: "white",
+                      ml: "auto",
+                      "&:hover": {
+                        borderColor: "white",
+                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      },
+                    }}
+                    onClick={handleCart}
+                  >
+                    Cart
+                  </Button>
                 </Tooltip>
               </Box>
             )}

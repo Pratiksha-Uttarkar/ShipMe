@@ -18,9 +18,13 @@ import "./App.css";
 import Login from "./components/Login";
 import LocalStorage from "./helpers/Localstorage";
 import "./interceptor/axiosinterceptor";
-import { Redirect } from "./components/Redirect";
-import Logout from "./components/Logout";
+// import { Redirect } from "./components/Redirect";
+// import Logout from "./components/Logout";
 import PrivateRoute from "./components/PrivateRoute";
+import CategoryStore from "./components/CategoryStore";
+import StoreItem from "./components/StoreItem";
+import Cart from "./components/Cart";
+import { Switch } from "react-router-dom";
 
 let initLocale = "en";
 
@@ -83,6 +87,12 @@ function LocalizationWrapper() {
 }
 
 function App({ locale, direction, onLocaleChange }) {
+  const [cartItems, setCartItems] = useState([]);
+
+  const addToCart = (item) => {
+    setCartItems((prevItems) => [...prevItems, item]);
+  };
+
   console.log(process.env);
   const [isUserLogin, setIsUserLogin] = useState(
     LocalStorage.get("token") ? true : false
@@ -130,6 +140,75 @@ function App({ locale, direction, onLocaleChange }) {
               />
             }
           />
+          <Route
+            path="/categories/:id"
+            element={
+              <>
+                <ResponsiveAppBar
+                  locale={locale}
+                  onLocaleChange={onLocaleChange}
+                  isUserLogin={isUserLogin}
+                  setIsUserLogin={setIsUserLogin}
+                />
+                <div
+                  style={{
+                    width: "60%",
+                    margin: "auto",
+                    padding: "20px",
+                  }}
+                >
+                  <CategoryStore />
+                </div>
+              </>
+            }
+          />
+          <Route
+            path="/store/:id"
+            element={
+              <>
+                <ResponsiveAppBar
+                  locale={locale}
+                  onLocaleChange={onLocaleChange}
+                  isUserLogin={isUserLogin}
+                  setIsUserLogin={setIsUserLogin}
+                />
+                <StoreItem addToCart={addToCart} />
+
+                <div
+                  style={{
+                    width: "60%",
+                    margin: "auto",
+                    padding: "20px",
+                  }}
+                >
+                  <StoreItem />
+                </div>
+              </>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <>
+                <ResponsiveAppBar
+                  locale={locale}
+                  onLocaleChange={onLocaleChange}
+                  isUserLogin={isUserLogin}
+                  setIsUserLogin={setIsUserLogin}
+                />
+                <Cart cartItems={cartItems} />
+                <div
+                  style={{
+                    width: "60%",
+                    margin: "auto",
+                    padding: "20px",
+                  }}
+                >
+                  <Cart />
+                </div>
+              </>
+            }
+          />
 
           <Route
             path="/"
@@ -158,7 +237,6 @@ function App({ locale, direction, onLocaleChange }) {
               </>
             }
           />
-
           <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
       </Router>

@@ -5,6 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export const Layout = () => {
   const [data, setData] = useState([]);
@@ -51,19 +52,24 @@ export const Layout = () => {
           if (item.isActive) {
             return (
               <Grid item={3}>
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      alt={item.imagePath.replace("http://localhost:3001", "")}
-                      image={item.imagePath.replace(
-                        "http://localhost:3001",
-                        ""
-                      )}
-                    />
-                  </CardActionArea>
-                </Card>
+                <Link to={"/categories/" + item.id}>
+                  <Card sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        alt={item.imagePath.replace(
+                          "http://localhost:3001",
+                          ""
+                        )}
+                        image={item.imagePath.replace(
+                          "http://localhost:3001",
+                          ""
+                        )}
+                      />
+                    </CardActionArea>
+                  </Card>
+                </Link>
               </Grid>
             );
           }
