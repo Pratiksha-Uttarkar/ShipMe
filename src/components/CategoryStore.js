@@ -36,7 +36,7 @@ export default function CategoryStore({}) {
   }
 
   return (
-    <div className="delivery-area-container">
+    <div>
       <h1 style={{ color: "black" }}>Stores</h1>
       <div className="grid-container">
         {data.map((store) => (

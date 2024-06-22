@@ -19,12 +19,13 @@ import Popover from "@mui/material/Popover";
 import { FormattedMessage } from "react-intl";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { TextField } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import CloseIcon from "@mui/icons-material/Close";
 import LocalStorage from "../helpers/Localstorage";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
+import axios from "axios";
 
 const pages = [
   <FormattedMessage id="products.label" />,
@@ -88,6 +89,8 @@ function ResponsiveAppBar({
   onLocaleChange,
   isUserLogin,
   setIsUserLogin,
+  cartNumber,
+  setCartNumber,
 }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -140,21 +143,14 @@ function ResponsiveAppBar({
   };
   const handleCart = () => {
     const jwtToken = localStorage.getItem("token");
-
-    // Split the token into header, payload, and signature
     const [headerEncoded, payloadEncoded, signature] = jwtToken.split(".");
-
-    // Decode the payload (second part)
     const decodedPayload = JSON.parse(
       atob(payloadEncoded.replace(/-/g, "+").replace(/_/g, "/"))
     );
-
-    // Example usage
     console.log("pqrsttt", decodedPayload);
     const { userId } = decodedPayload;
     console.log("sakshi", userId);
-    // navigate(`/cart${userId}`);
-    navigate("/cart?user_id=" + userId);
+    navigate("/cart");
   };
 
   const handleOpenNavMenu = (event) => {
@@ -172,6 +168,15 @@ function ResponsiveAppBar({
     setAnchorElUser(null);
   };
 
+  useEffect(async () => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      const response = await axios.get(
+        `http://localhost:5000/api/v1/cart?user_id=${userId}`
+      );
+      setCartNumber(response.data.data.length);
+    }
+  }, []);
   return (
     <AppBar position="static" style={{ zIndex: 1000 }}>
       {/* <div>hello</div> */}
@@ -395,7 +400,7 @@ function ResponsiveAppBar({
                     }}
                     onClick={handleCart}
                   >
-                    Cart
+                    Cart {cartNumber == 0 ? "" : cartNumber}
                   </Button>
                 </Tooltip>
               </Box>

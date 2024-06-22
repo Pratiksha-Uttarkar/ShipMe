@@ -25,6 +25,8 @@ import CategoryStore from "./components/CategoryStore";
 import StoreItem from "./components/StoreItem";
 import Cart from "./components/Cart";
 import { Switch } from "react-router-dom";
+import Checkout from "./components/Checkout";
+import PreviewPage from "./components/PreviewPage";
 
 let initLocale = "en";
 
@@ -88,8 +90,10 @@ function LocalizationWrapper() {
 
 function App({ locale, direction, onLocaleChange }) {
   const [cartItems, setCartItems] = useState([]);
+  const [cartNumber, setCartNumber] = useState(0);
 
   const addToCart = (item) => {
+    console.log(item);
     setCartItems((prevItems) => [...prevItems, item]);
   };
 
@@ -98,20 +102,26 @@ function App({ locale, direction, onLocaleChange }) {
     LocalStorage.get("token") ? true : false
   );
   console.log(isUserLogin);
+  const userId = localStorage.getItem("userId") || "user_id";
+
   return (
     <div className="App">
       <Router>
+        <ResponsiveAppBar
+          key={userId}
+          cartNumber={cartNumber}
+          cartItems={cartItems}
+          locale={locale}
+          onLocaleChange={onLocaleChange}
+          isUserLogin={isUserLogin}
+          setIsUserLogin={setIsUserLogin}
+          setCartNumber={setCartNumber}
+        />
         <Routes>
           <Route
             path="/register"
             element={
               <>
-                <ResponsiveAppBar
-                  locale={locale}
-                  onLocaleChange={onLocaleChange}
-                  isUserLogin={isUserLogin}
-                  setIsUserLogin={setIsUserLogin}
-                />
                 <Register /> <Footer />{" "}
               </>
             }
@@ -122,12 +132,6 @@ function App({ locale, direction, onLocaleChange }) {
               <PrivateRoute
                 element={
                   <>
-                    <ResponsiveAppBar
-                      locale={locale}
-                      onLocaleChange={onLocaleChange}
-                      isUserLogin={isUserLogin}
-                      setIsUserLogin={setIsUserLogin}
-                    />
                     <Login
                       setIsUserLogin={setIsUserLogin}
                       isUserLogin={isUserLogin}
@@ -144,12 +148,6 @@ function App({ locale, direction, onLocaleChange }) {
             path="/categories/:id"
             element={
               <>
-                <ResponsiveAppBar
-                  locale={locale}
-                  onLocaleChange={onLocaleChange}
-                  isUserLogin={isUserLogin}
-                  setIsUserLogin={setIsUserLogin}
-                />
                 <div
                   style={{
                     width: "60%",
@@ -166,13 +164,10 @@ function App({ locale, direction, onLocaleChange }) {
             path="/store/:id"
             element={
               <>
-                <ResponsiveAppBar
-                  locale={locale}
-                  onLocaleChange={onLocaleChange}
-                  isUserLogin={isUserLogin}
-                  setIsUserLogin={setIsUserLogin}
+                <StoreItem
+                  addToCart={addToCart}
+                  setCartNumber={setCartNumber}
                 />
-                <StoreItem addToCart={addToCart} />
 
                 <div
                   style={{
@@ -181,7 +176,7 @@ function App({ locale, direction, onLocaleChange }) {
                     padding: "20px",
                   }}
                 >
-                  <StoreItem />
+                  {/* <StoreItem /> */}
                 </div>
               </>
             }
@@ -190,13 +185,7 @@ function App({ locale, direction, onLocaleChange }) {
             path="/cart"
             element={
               <>
-                <ResponsiveAppBar
-                  locale={locale}
-                  onLocaleChange={onLocaleChange}
-                  isUserLogin={isUserLogin}
-                  setIsUserLogin={setIsUserLogin}
-                />
-                <Cart cartItems={cartItems} />
+                {/* <Cart cartItems={cartItems} /> */}
                 <div
                   style={{
                     width: "60%",
@@ -204,22 +193,51 @@ function App({ locale, direction, onLocaleChange }) {
                     padding: "20px",
                   }}
                 >
-                  <Cart />
+                  <Cart
+                    setCartNumber={setCartNumber}
+                    cartItems={cartItems}
+                    setCartItems={setCartItems}
+                  />
                 </div>
               </>
             }
           />
-
+          <Route
+            path="/checkout"
+            element={
+              <>
+                <div
+                  style={{
+                    width: "60%",
+                    margin: "auto",
+                    padding: "20px",
+                  }}
+                >
+                  <Checkout />
+                </div>
+              </>
+            }
+          />
+          <Route
+            path="/preview"
+            element={
+              <>
+                <div
+                  style={{
+                    width: "60%",
+                    margin: "auto",
+                    padding: "20px",
+                  }}
+                >
+                  <PreviewPage />
+                </div>
+              </>
+            }
+          />
           <Route
             path="/"
             element={
               <>
-                <ResponsiveAppBar
-                  locale={locale}
-                  onLocaleChange={onLocaleChange}
-                  isUserLogin={isUserLogin}
-                  setIsUserLogin={setIsUserLogin}
-                />
                 <div
                   style={{
                     width: "60%",

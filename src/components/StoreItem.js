@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function StoreItem({ addToCart }) {
+export default function StoreItem({ addToCart, setCartNumber }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,16 +40,11 @@ export default function StoreItem({ addToCart }) {
   const handleAddToCart = async (item) => {
     try {
       const jwtToken = localStorage.getItem("token");
-
-      // Split the token into header, payload, and signature
       const [headerEncoded, payloadEncoded, signature] = jwtToken.split(".");
-
-      // Decode the payload (second part)
       const decodedPayload = JSON.parse(
         atob(payloadEncoded.replace(/-/g, "+").replace(/_/g, "/"))
       );
 
-      // Example usage
       console.log("abcde", decodedPayload);
       const { userId } = decodedPayload;
       await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/add-to-cart`, {
@@ -57,6 +52,10 @@ export default function StoreItem({ addToCart }) {
         item_id: item.item_id,
         quantity: 1,
       });
+      const response = await axios.get(
+        `http://localhost:5000/api/v1/cart?user_id=${userId}`
+      );
+      setCartNumber(response.data.data.length);
       addToCart(item);
     } catch (error) {
       console.error("Error adding item to cart:", error);
@@ -64,9 +63,11 @@ export default function StoreItem({ addToCart }) {
   };
 
   return (
-    <div className="delivery-area-container">
-      <h1 style={{ color: "black" }}>Items</h1>
-      <div className="grid-container">
+    <div>
+      <h1 style={{ color: "black", textAlign: "center", marginBottom: "20px" }}>
+        Items
+      </h1>
+      <div className="grid-container-item">
         {data.map((item) => (
           <div key={item.item_id} className="grid-item">
             <h2>{item.item_name}</h2>
