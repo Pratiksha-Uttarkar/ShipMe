@@ -167,8 +167,7 @@ function ResponsiveAppBar({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  useEffect(async () => {
+  const cartData = async () => {
     const userId = localStorage.getItem("userId");
     if (userId) {
       const response = await axios.get(
@@ -176,6 +175,9 @@ function ResponsiveAppBar({
       );
       setCartNumber(response.data.data.length);
     }
+  };
+  useEffect(() => {
+    cartData();
   }, []);
   return (
     <AppBar position="static" style={{ zIndex: 1000 }}>
@@ -381,7 +383,7 @@ function ResponsiveAppBar({
 
             {isUserLogin && (
               <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
+                <Tooltip title="Open settings" style={{ display: "flex" }}>
                   <AvatarDropdown
                     style={{ paddingRight: "20%" }}
                     onLogout={handleLogout}

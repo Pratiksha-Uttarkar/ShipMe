@@ -32,11 +32,11 @@ export default function Deliveryarea() {
   }
 
   return (
-    <div>
+    <div className="">
       <h1 style={{ color: "black" }}>Delivery areas Hubli</h1>
-      <div className="grid-container">
+      <div className="grid-container2">
         {data.map((area) => (
-          <div key={area.area_id} className="grid-item">
+          <div key={area.area_id} className="">
             {area.area_name}
           </div>
         ))}

@@ -81,6 +81,13 @@
   padding: 50px;
   margin-left: 100px;
 }
+.grid-container2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 50px;
+  padding: 50px;
+  margin-left: 20px;
+}
 .grid-container-item {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
