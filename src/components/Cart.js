@@ -60,6 +60,9 @@ export default function Cart({ cartItems, setCartItems, setCartNumber }) {
   function handleProceed() {
     navigate("/checkout");
   }
+  function handleAdditems() {
+    navigate("/");
+  }
 
   return (
     <div className="delivery-area-container">
@@ -109,7 +112,7 @@ export default function Cart({ cartItems, setCartItems, setCartNumber }) {
                         </button>
                       </div>
                       <h4 className="item-subtotal">
-                        Sub Total: $
+                        Sub Total: ₹
                         {(tempPrice = item.item_price * item.quantity)}
                       </h4>
                     </li>
@@ -120,16 +123,22 @@ export default function Cart({ cartItems, setCartItems, setCartNumber }) {
             <p>Your cart is empty.</p>
           )}
           <div className="total-price">
-            Total Price: $
+            Total Price: ₹
             {cartItems.reduce(
               (acc, item) => acc + item.item_price * item.quantity,
               0
             )}
           </div>
           <div className="button-container">
-            <Button variant="contained" onClick={() => handleProceed()}>
-              Proceed to checkout
-            </Button>
+            {cartItems.length > 0 ? (
+              <Button variant="contained" onClick={() => handleProceed()}>
+                Proceed to checkout
+              </Button>
+            ) : (
+              <Button variant="contained" onClick={() => handleAdditems()}>
+                Add items
+              </Button>
+            )}
           </div>
         </div>
       </div>

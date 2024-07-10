@@ -27,6 +27,7 @@ import Cart from "./components/Cart";
 import { Switch } from "react-router-dom";
 import Checkout from "./components/Checkout";
 import PreviewPage from "./components/PreviewPage";
+import OrderPage from "./components/OrderPage";
 
 let initLocale = "en";
 
@@ -229,7 +230,23 @@ function App({ locale, direction, onLocaleChange }) {
                     padding: "20px",
                   }}
                 >
-                  <PreviewPage />
+                  <PreviewPage setCartNumber={setCartNumber} />
+                </div>
+              </>
+            }
+          />
+          <Route
+            path="/orderpage"
+            element={
+              <>
+                <div
+                  style={{
+                    width: "60%",
+                    margin: "auto",
+                    padding: "20px",
+                  }}
+                >
+                  <OrderPage />
                 </div>
               </>
             }
